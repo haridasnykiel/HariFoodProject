@@ -7,12 +7,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace HariFood {
     public class Startup {
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public void ConfigureServices (IServiceCollection services) 
+        public void ConfigureServices (IServiceCollection services)
         // This is the method that allows the user to register
         // services. So in order for core to known about the new
         // object the object needs to be registered here.
@@ -20,7 +21,7 @@ namespace HariFood {
             //services.AddSingleton (); // Will tell core that the object will only need to be instantiated onces.
             //services.AddTransient(); // Will tell core that every time this type is required create a new instants.
             //services.AddScoped(); // Will tell core that the type is only instaniate once for every http request.
-            services.AddSingleton<IGreeter, Greeter>(); 
+            services.AddSingleton<IGreeter, Greeter> ();
             // The above says that when ever anyone needs service that implements IGreeter. Create an instants of Greeter
             // pass that object. So the first param is the service and the second is the implementation of that service.
             // This is a method of dependancy injection that core takes. By passing the whole type as a parameter.
@@ -35,20 +36,53 @@ namespace HariFood {
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure (
-            IApplicationBuilder app,
+            IApplicationBuilder app, // This object is what allows you to use various types of middleware. 
             IHostingEnvironment env,
-            IGreeter greeter) { 
+            IGreeter greeter,
+            ILogger<Startup> logger) { // Logger is an objct that is already registered to core. 
+            // This is were all the middleware is registered.
             // This works because asp .net core uses dependency injection 
             // in various places throughout the framework
             // When this method Configure is called .net core will read the args
             // and if the object is known by core then the object or service will be passed in.
             // IConfiguration is an object that is registered to core. Which will allow to instaniate the object.
             // Due to IGreeter not being registered to core the object will not be able to get injected to this method.
-            if (env.IsDevelopment ()) {
-                app.UseDeveloperExceptionPage ();
-            }
 
-            app.Run (async (context) => {
+            // if (env.IsDevelopment ()) {
+            //     app.UseDeveloperExceptionPage ();
+            // }
+
+            app.Use (next => //This is a function which is a request delegate. 
+                            //This outer function is only invoked once. This is when app.Use is called.
+                {
+                    // This function needs to return a request delegate. That is a function that takes a httpcontext obj
+                    // and returns a task.
+                    return async context => { // This inner function is invoked once per HTTP request.
+                                                //This inner function is the middleware 
+
+                        logger.LogInformation ("Request incoming");
+
+                        if (context.Request.Path.StartsWithSegments ("/mym")) { 
+                            //If the request does not have this extension thenit will hit the else.
+                            await context.Response.WriteAsync ("Hit!!");
+                            logger.LogInformation ("Request handled");
+                        } else {
+                            await next (context); // The outer function will pass the function to the next piece of middleware
+                            logger.LogInformation ("Response outgoing");
+                        }
+                    };
+                });
+            //A request delegate is something that takes httpContext object and returns a task. 
+            //This can be seen in the app.Run method call.
+
+            app.UseWelcomePage (new WelcomePageOptions {
+                Path = "/wp" // This will now only respond with the page when the url has the following path extension.
+            });
+            //This is a very simple piece of middleware. This will respond with a .net core
+            //promo page. Because this method responds to every request. All requests
+            //will just return the welcome page. So the below middleware will never have a chance to run.
+
+            app.Run (async (context) => { //This is a simple piece of middleware.
                 var greeting = greeter.MessageOfTheDay ();
                 await context.Response.WriteAsync (greeting);
                 // the above line will respond to every type of request with the same text.
