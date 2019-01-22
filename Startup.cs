@@ -37,7 +37,7 @@ namespace HariFood {
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure (
             IApplicationBuilder app, // This object is what allows you to use various types of middleware. 
-            IHostingEnvironment env,
+            IHostingEnvironment env, // This will give information about the environment the app is being run on.
             IGreeter greeter,
             ILogger<Startup> logger) { // Logger is an objct that is already registered to core. 
             // This is were all the middleware is registered.
@@ -48,44 +48,55 @@ namespace HariFood {
             // IConfiguration is an object that is registered to core. Which will allow to instaniate the object.
             // Due to IGreeter not being registered to core the object will not be able to get injected to this method.
 
-            // if (env.IsDevelopment ()) {
-            //     app.UseDeveloperExceptionPage ();
-            // }
+            // app.Use(stopFavicon => 
+            // {
+            //     return async context => {
+            //         if(context.Request.Path.StartsWithSegments("/favicon.ico")) {
+            //             context.Response.Clear();
+            //         }
+            //     }
 
-            app.Use (next => //This is a function which is a request delegate. 
-                            //This outer function is only invoked once. This is when app.Use is called.
-                {
-                    // This function needs to return a request delegate. That is a function that takes a httpcontext obj
-                    // and returns a task.
-                    return async context => { // This inner function is invoked once per HTTP request.
-                                                //This inner function is the middleware 
+            // });
 
-                        logger.LogInformation ("Request incoming");
+            // app.Use (next => //This is a function which is a request delegate. 
+            //                 //This outer function is only invoked once. This is when app.Use is called.
+            //     {
+            //         // This function needs to return a request delegate. That is a function that takes a httpcontext obj
+            //         // and returns a task.
+            //         return async context => { // This inner function is invoked once per HTTP request.
+            //                                     //This inner function is the middleware 
 
-                        if (context.Request.Path.StartsWithSegments ("/mym")) { 
-                            //If the request does not have this extension thenit will hit the else.
-                            await context.Response.WriteAsync ("Hit!!");
-                            logger.LogInformation ("Request handled");
-                        } else {
-                            await next (context); // The outer function will pass the function to the next piece of middleware
-                            logger.LogInformation ("Response outgoing");
-                        }
-                    };
-                });
+            //             logger.LogInformation ("Request incoming");
+
+            //             if (context.Request.Path.StartsWithSegments ("/mym")) { 
+            //                 //If the request does not have this extension thenit will hit the else.
+            //                 await context.Response.WriteAsync ("Hit!!");
+            //                 logger.LogInformation ("Request handled");
+            //             } else {
+            //                 await next (context); // The outer function will pass the function to the next piece of middleware
+            //                 logger.LogInformation ("Response outgoing");
+            //             }
+            //         };
+            //     });
             //A request delegate is something that takes httpContext object and returns a task. 
             //This can be seen in the app.Run method call.
 
-            app.UseWelcomePage (new WelcomePageOptions {
-                Path = "/wp" // This will now only respond with the page when the url has the following path extension.
-            });
+            // app.UseWelcomePage (new WelcomePageOptions {
+            //     Path = "/wp" // This will now only respond with the page when the url has the following path extension.
+            // });
             //This is a very simple piece of middleware. This will respond with a .net core
             //promo page. Because this method responds to every request. All requests
             //will just return the welcome page. So the below middleware will never have a chance to run.
 
+            if (env.IsDevelopment ()) {
+                var envName = env.EnvironmentName;
+                app.UseDeveloperExceptionPage (); 
+            }
+
             app.Run (async (context) => { //This is a simple piece of middleware.
+  
                 var greeting = greeter.MessageOfTheDay ();
-                await context.Response.WriteAsync (greeting);
-                // the above line will respond to every type of request with the same text.
+                await context.Response.WriteAsync ($"{greeting} : {env.EnvironmentName}");
             });
         }
     }
