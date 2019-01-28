@@ -22,6 +22,7 @@ namespace HariFood {
             //services.AddTransient(); // Will tell core that every time this type is required create a new instants.
             //services.AddScoped(); // Will tell core that the type is only instaniate once for every http request.
             services.AddSingleton<IGreeter, Greeter> ();
+            services.AddMvc();
             // The above says that when ever anyone needs service that implements IGreeter. Create an instants of Greeter
             // pass that object. So the first param is the service and the second is the implementation of that service.
             // This is a method of dependancy injection that core takes. By passing the whole type as a parameter.
@@ -58,26 +59,19 @@ namespace HariFood {
 
             // });
 
-            // app.Use (next => //This is a function which is a request delegate. 
-            //                 //This outer function is only invoked once. This is when app.Use is called.
-            //     {
-            //         // This function needs to return a request delegate. That is a function that takes a httpcontext obj
-            //         // and returns a task.
-            //         return async context => { // This inner function is invoked once per HTTP request.
-            //                                     //This inner function is the middleware 
-
-            //             logger.LogInformation ("Request incoming");
-
-            //             if (context.Request.Path.StartsWithSegments ("/mym")) { 
-            //                 //If the request does not have this extension thenit will hit the else.
-            //                 await context.Response.WriteAsync ("Hit!!");
-            //                 logger.LogInformation ("Request handled");
-            //             } else {
-            //                 await next (context); // The outer function will pass the function to the next piece of middleware
-            //                 logger.LogInformation ("Response outgoing");
-            //             }
-            //         };
-            //     });
+            app.Use (next => //This is a function which is a request delegate. 
+                {
+                    return async context => { // This inner function is invoked once per HTTP request.
+                        logger.LogInformation ("Request incoming");
+                        if (context.Request.Path.StartsWithSegments ("/mym")) { 
+                            await context.Response.WriteAsync ("Hit!!");
+                            logger.LogInformation ("Request handled");
+                        } else {
+                            await next (context); // The outer function will pass the function to the next piece of middleware
+                            logger.LogInformation ("Response outgoing");
+                        }
+                    };
+                });
             //A request delegate is something that takes httpContext object and returns a task. 
             //This can be seen in the app.Run method call.
 
@@ -89,12 +83,17 @@ namespace HariFood {
             //will just return the welcome page. So the below middleware will never have a chance to run.
 
             if (env.IsDevelopment ()) {
-                var envName = env.EnvironmentName;
                 app.UseDeveloperExceptionPage (); 
-            }
+            } 
+            // else {
+            //     app.UseExceptionHandler();
+            // }
+
+            app.UseStaticFiles(); 
+
+            app.UseMvcWithDefaultRoute();
 
             app.Run (async (context) => { //This is a simple piece of middleware.
-  
                 var greeting = greeter.MessageOfTheDay ();
                 await context.Response.WriteAsync ($"{greeting} : {env.EnvironmentName}");
             });
