@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -40,7 +41,7 @@ namespace HariFood {
             IApplicationBuilder app, // This object is what allows you to use various types of middleware. 
             IHostingEnvironment env, // This will give information about the environment the app is being run on.
             IGreeter greeter,
-            ILogger<Startup> logger) { // Logger is an objct that is already registered to core. 
+            ILogger<Startup> logger) { // Logger is an object that is already registered to core. 
             // This is were all the middleware is registered.
             // This works because asp .net core uses dependency injection 
             // in various places throughout the framework
@@ -48,16 +49,6 @@ namespace HariFood {
             // and if the object is known by core then the object or service will be passed in.
             // IConfiguration is an object that is registered to core. Which will allow to instaniate the object.
             // Due to IGreeter not being registered to core the object will not be able to get injected to this method.
-
-            // app.Use(stopFavicon => 
-            // {
-            //     return async context => {
-            //         if(context.Request.Path.StartsWithSegments("/favicon.ico")) {
-            //             context.Response.Clear();
-            //         }
-            //     }
-
-            // });
 
             app.Use (next => //This is a function which is a request delegate. 
                 {
@@ -91,12 +82,21 @@ namespace HariFood {
 
             app.UseStaticFiles(); 
 
-            app.UseMvcWithDefaultRoute();
+            app.UseMvc(ConfigureRoutes);
+            //app.UseMvcWithDefaultRoute(); //This will use homeController class and index method as the default for all requests. 
 
             app.Run (async (context) => { //This is a simple piece of middleware.
                 var greeting = greeter.MessageOfTheDay ();
-                await context.Response.WriteAsync ($"{greeting} : {env.EnvironmentName}");
+                context.Response.ContentType = "text/plain";
+                await context.Response.WriteAsync ($"Not Found");
             });
+        }
+
+        private void ConfigureRoutes(IRouteBuilder routeBuilder)
+        {
+            //Here you can define one or more routes for the MVC app.
+            routeBuilder.MapRoute("Default", "{controller=Home}/{action=Index}/{id?}" ); //This is the route template. 
+            // The arg is the name of the route and the second is the template.
         }
     }
 }
