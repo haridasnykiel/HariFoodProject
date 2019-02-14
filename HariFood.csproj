@@ -15,5 +15,6 @@
     <Content Include="IGreeter.cs" />
     <Content Include="Controllers\HomeController.cs" />
     <Content Include="Controllers\AboutController.cs" />
+    <Content Include="Models\Resturant.cs" />
   </ItemGroup>
 </Project>
