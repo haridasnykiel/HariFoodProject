@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Configuration;
 
-namespace HariFood {
+namespace HariFood.Services {
     public interface IGreeter //This is the interface definition for the greeting service.
     {
         string MessageOfTheDay ();

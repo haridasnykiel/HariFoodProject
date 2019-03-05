@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HariFood.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -23,6 +24,7 @@ namespace HariFood {
             //services.AddTransient(); // Will tell core that every time this type is required create a new instants.
             //services.AddScoped(); // Will tell core that the type is only instaniate once for every http request.
             services.AddSingleton<IGreeter, Greeter> ();
+            services.AddScoped<IRestaurantData, InMemoryRestaurantData> ();
             services.AddMvc();
             // The above says that when ever anyone needs service that implements IGreeter. Create an instants of Greeter
             // pass that object. So the first param is the service and the second is the implementation of that service.

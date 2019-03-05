@@ -1,6 +1,6 @@
-namespace HariFood.Models
+﻿namespace HariFood.Models
 {
-    public class Resturant
+    public class Restaurant
     {
         public int Id { get; set; }
         public string Name { get; set; }
