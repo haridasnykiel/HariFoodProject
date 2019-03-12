@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-@model HariFood.Models.Resturant
+@model IEnumerable<HariFood.Models.Restaurant>;
 <html>
 <head>
     <meta charset="utf-8">
@@ -10,7 +10,14 @@
     <script src="main.js"></script>
 </head>
 <body>
-    <h1>@Model.Name</h1>
-    <div>Resturant ID: @Model.Id</div>
+    <table>
+        @foreach (var restaurant in Model)
+        {
+            <tr>
+                <td>@restaurant.Id</td>
+                <td>@restaurant.Name</td>
+            </tr>
+        }
+    </table>
 </body>
 </html>
