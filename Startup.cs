@@ -68,13 +68,6 @@ namespace HariFood {
             //A request delegate is something that takes httpContext object and returns a task. 
             //This can be seen in the app.Run method call.
 
-            // app.UseWelcomePage (new WelcomePageOptions {
-            //     Path = "/wp" // This will now only respond with the page when the url has the following path extension.
-            // });
-            //This is a very simple piece of middleware. This will respond with a .net core
-            //promo page. Because this method responds to every request. All requests
-            //will just return the welcome page. So the below middleware will never have a chance to run.
-
             if (env.IsDevelopment ()) {
                 app.UseDeveloperExceptionPage (); 
             } 

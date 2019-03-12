@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-@model IEnumerable<HariFood.Models.Restaurant>;
+@model HariFood.ViewModels.HomeIndexViewModel;
 <html>
 <head>
     <meta charset="utf-8">
@@ -10,8 +10,9 @@
     <script src="main.js"></script>
 </head>
 <body>
+    <h1>@Model.Message</h1>
     <table>
-        @foreach (var restaurant in Model)
+        @foreach (var restaurant in Model.Restaurants)
         {
             <tr>
                 <td>@restaurant.Id</td>
