@@ -18,10 +18,15 @@ namespace HariFood.Controllers {
             //var controllerName = this.ControllerContext.ActionDescriptor.ControllerName; // Get the controller name.
             var model = new HomeIndexViewModel () {
                 Restaurants = _restaurantData.GetAll (),
-                Message = _greeter.MessageOfTheDay()  
+                Message = _greeter.MessageOfTheDay ()
             };
-            
+
             //new ObjectResult(model);
+            return View (model);
+        }
+
+        public IActionResult Details (int id) {
+            var model = _restaurantData.Get (id);
             return View (model);
         }
     }
