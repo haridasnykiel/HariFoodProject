@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using HariFood.Models;
@@ -9,12 +10,12 @@ namespace HariFood.Services {
 
         public InMemoryRestaurantData () {
             _restaurants = new List<Restaurant> {
-                new Restaurant { Id = 2, Name = "Kathryns Samosas" },
-                new Restaurant { Id = 1, Name = "Haridas Chevda" },
-                new Restaurant { Id = 1, Name = "Zulu" },
-                new Restaurant { Id = 1, Name = "Walk" },
-                new Restaurant { Id = 1, Name = "Yo" },
-                new Restaurant { Id = 3, Name = "Prashad" }
+                new Restaurant { Id = 2, Name = "Kathryns Samosas", Cuisine = CuisineType.Indian },
+                new Restaurant { Id = 1, Name = "Haridas Chevda", Cuisine = CuisineType.Indian },
+                new Restaurant { Id = 1, Name = "Zulu", Cuisine = CuisineType.None },
+                new Restaurant { Id = 1, Name = "Walk", Cuisine = CuisineType.Italian },
+                new Restaurant { Id = 1, Name = "Yo", Cuisine = CuisineType.Chinese },
+                new Restaurant { Id = 3, Name = "Prashad", Cuisine = CuisineType.Indian }
             };
         }
 
@@ -22,8 +23,8 @@ namespace HariFood.Services {
             return _restaurants.OrderBy (r => r.Name);
         }
 
-        public Restaurant Get(int id) {
-            return _restaurants.FirstOrDefault(r => r.Id == id);
+        public Restaurant Get (int id) {
+            return _restaurants.FirstOrDefault (r => r.Id == id);
         }
     }
 }

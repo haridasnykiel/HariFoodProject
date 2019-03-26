@@ -17,8 +17,13 @@
             <tr>
                 <td>@restaurant.Id</td>
                 <td>@restaurant.Name</td>
+                <td>
+                    <a  asp-controller="Home" asp-action="Details" asp-route-id="@restaurant.Id">Details</a>
+                </td>
+                
             </tr>
         }
     </table>
+    <a asp-controller="Home" asp-action="Create">Create A Restaurant</a>
 </body>
 </html>
