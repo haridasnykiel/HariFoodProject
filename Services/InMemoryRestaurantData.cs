@@ -10,12 +10,12 @@ namespace HariFood.Services {
 
         public InMemoryRestaurantData () {
             _restaurants = new List<Restaurant> {
-                new Restaurant { Id = 2, Name = "Kathryns Samosas", Cuisine = CuisineType.Indian },
-                new Restaurant { Id = 1, Name = "Haridas Chevda", Cuisine = CuisineType.Indian },
-                new Restaurant { Id = 1, Name = "Zulu", Cuisine = CuisineType.None },
-                new Restaurant { Id = 1, Name = "Walk", Cuisine = CuisineType.Italian },
-                new Restaurant { Id = 1, Name = "Yo", Cuisine = CuisineType.Chinese },
-                new Restaurant { Id = 3, Name = "Prashad", Cuisine = CuisineType.Indian }
+                new Restaurant { Id = 1, Name = "Kathryns Samosas", Cuisine = CuisineType.Indian },
+                new Restaurant { Id = 2, Name = "Haridas Chevda", Cuisine = CuisineType.Indian },
+                new Restaurant { Id = 3, Name = "Zulu", Cuisine = CuisineType.None },
+                new Restaurant { Id = 4, Name = "Walk", Cuisine = CuisineType.Italian },
+                new Restaurant { Id = 5, Name = "Yo", Cuisine = CuisineType.Chinese },
+                new Restaurant { Id = 6, Name = "Prashad", Cuisine = CuisineType.Indian }
             };
         }
 
@@ -25,6 +25,14 @@ namespace HariFood.Services {
 
         public Restaurant Get (int id) {
             return _restaurants.FirstOrDefault (r => r.Id == id);
+        }
+
+        public Restaurant Add(Restaurant restaurant)
+        {
+            var id = _restaurants.Max(r => r.Id) + 1;
+            restaurant.Id = id;
+            _restaurants.Add(restaurant);
+            return restaurant;
         }
     }
 }

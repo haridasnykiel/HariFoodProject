@@ -24,7 +24,7 @@ namespace HariFood {
             //services.AddTransient(); // Will tell core that every time this type is required create a new instants.
             //services.AddScoped(); // Will tell core that the type is only instaniate once for every http request.
             services.AddSingleton<IGreeter, Greeter> ();
-            services.AddScoped<IRestaurantData, InMemoryRestaurantData> ();
+            services.AddSingleton<IRestaurantData, InMemoryRestaurantData> ();
             services.AddMvc();
             // The above says that when ever anyone needs service that implements IGreeter. Create an instants of Greeter
             // pass that object. So the first param is the service and the second is the implementation of that service.

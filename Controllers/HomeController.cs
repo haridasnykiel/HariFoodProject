@@ -33,8 +33,21 @@ namespace HariFood.Controllers {
             return View (model);
         }
 
+        [HttpGet]
         public IActionResult Create () {
             return View ();
+        }
+
+        [HttpPost]
+        public IActionResult Create (RestaurantEditModel restaurantEdit) {
+            var restaurant = new Restaurant {
+                Name = restaurantEdit.Name,
+                Cuisine = restaurantEdit.Cuisine
+            };
+
+            restaurant = _restaurantData.Add(restaurant);
+
+            return RedirectToAction(nameof(Details), new{id = restaurant.Id});
         }
     }
 }
