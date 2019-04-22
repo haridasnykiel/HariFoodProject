@@ -39,15 +39,22 @@ namespace HariFood.Controllers {
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create (RestaurantEditModel restaurantEdit) {
-            var restaurant = new Restaurant {
-                Name = restaurantEdit.Name,
-                Cuisine = restaurantEdit.Cuisine
-            };
 
-            restaurant = _restaurantData.Add(restaurant);
+            if (ModelState.IsValid) {
+                var restaurant = new Restaurant {
+                    Name = restaurantEdit.Name,
+                    Cuisine = restaurantEdit.Cuisine
+                };
 
-            return RedirectToAction(nameof(Details), new{id = restaurant.Id});
+                restaurant = _restaurantData.Add (restaurant);
+
+                return RedirectToAction (nameof (Details), new { id = restaurant.Id });
+            } else {
+                return View();
+            }
+
         }
     }
 }
