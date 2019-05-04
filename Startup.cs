@@ -2,17 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HariFood.Data;
 using HariFood.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace HariFood {
     public class Startup {
+
+        private IConfiguration _configuration;
+
+        public Startup(IConfiguration configure)
+        {
+            _configuration = configure;    
+        }
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices (IServiceCollection services)
@@ -24,7 +33,10 @@ namespace HariFood {
             //services.AddTransient(); // Will tell core that every time this type is required create a new instants.
             //services.AddScoped(); // Will tell core that the type is only instaniate once for every http request.
             services.AddSingleton<IGreeter, Greeter> ();
-            services.AddSingleton<IRestaurantData, InMemoryRestaurantData> ();
+            services.AddDbContext<HariFoodDbContext>(options => 
+            options.UseSqlServer(_configuration.GetConnectionString("HariFood")));
+
+            services.AddScoped<IRestaurantData, SqlRestaurantData> ();
             services.AddMvc();
             // The above says that when ever anyone needs service that implements IGreeter. Create an instants of Greeter
             // pass that object. So the first param is the service and the second is the implementation of that service.
