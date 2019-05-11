@@ -34,5 +34,10 @@ namespace HariFood.Services {
             _restaurants.Add(restaurant);
             return restaurant;
         }
+
+        public string Delete(Restaurant restaurant)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -1,3 +1,4 @@
+using System.Linq;
 using HariFood.Models;
 using HariFood.Services;
 using HariFood.ViewModels;
@@ -52,9 +53,17 @@ namespace HariFood.Controllers {
 
                 return RedirectToAction (nameof (Details), new { id = restaurant.Id });
             } else {
-                return View();
+                return View ();
             }
 
+        }
+
+        //Soft deletes are generally a better approach then doing a full remove from the database. 
+        //That way no data is lost in the db.
+        public IActionResult Delete (int id) {
+            var restaurant = _restaurantData.Get (id);
+            _restaurantData.Delete (restaurant);
+            return View (restaurant);
         }
     }
 }

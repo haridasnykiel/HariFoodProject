@@ -6,6 +6,8 @@ namespace HariFood.Services {
         IEnumerable<Restaurant> GetAll ();
         Restaurant Get (int id);
 
-        Restaurant Add( Restaurant restaurant );
+        Restaurant Add (Restaurant restaurant);
+
+        string Delete (Restaurant restaurant);
     }
 }
