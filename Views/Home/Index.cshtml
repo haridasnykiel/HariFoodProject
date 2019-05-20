@@ -2,7 +2,6 @@
 
 @{
     ViewBag.Title = "Home";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>All Restaurants</h1>
@@ -22,6 +21,4 @@
 </table>
 <a asp-controller="Home" asp-action="Create">Create A Restaurant</a>
 
-@section footer {
-    @Model.Message
-}
+    
