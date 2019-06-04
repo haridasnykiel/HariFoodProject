@@ -1,0 +1,14 @@
+@page "{id}"
+@using HariFood.Pages.Restaurants;
+
+@model EditModel
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h1>Restaurant</h1>
+<div>
+    <span>@Model.Restaurant.Name</span>
+    <span>@Model.Restaurant.Cuisine</span>
+</div>
