@@ -1,5 +1,6 @@
 using HariFood.Models;
 using HariFood.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace HariFood.Pages.Restaurants
@@ -8,6 +9,7 @@ namespace HariFood.Pages.Restaurants
     {
         private IRestaurantData _restaurantData;
 
+        [BindProperty]
         public Restaurant Restaurant {get; private set;} 
         
         public EditModel(IRestaurantData restaurantData)
@@ -15,8 +17,19 @@ namespace HariFood.Pages.Restaurants
             _restaurantData = restaurantData;
         }
 
-        public void OnGet(int id) {
+        public IActionResult OnGet(int id) {
             Restaurant  = _restaurantData.Get(id);
+            if(Restaurant == null) {
+                return RedirectToAction("Index", "Home");
+            }
+            return Page();
+        }
+
+        public IActionResult OnPost() {
+            if(ModelState.IsValid) {
+
+            }
+            return Page();
         }
     }
 }
