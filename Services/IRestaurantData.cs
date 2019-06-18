@@ -9,5 +9,7 @@ namespace HariFood.Services {
         Restaurant Add (Restaurant restaurant);
 
         string Delete (Restaurant restaurant);
+
+        Restaurant Update (Restaurant restaurant);
     }
 }

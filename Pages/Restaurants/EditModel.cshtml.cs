@@ -10,7 +10,7 @@ namespace HariFood.Pages.Restaurants
         private IRestaurantData _restaurantData;
 
         [BindProperty]
-        public Restaurant Restaurant {get; private set;} 
+        public Restaurant Restaurant {get; set;} 
         
         public EditModel(IRestaurantData restaurantData)
         {
@@ -27,7 +27,8 @@ namespace HariFood.Pages.Restaurants
 
         public IActionResult OnPost() {
             if(ModelState.IsValid) {
-
+                _restaurantData.Update(Restaurant);
+                return RedirectToAction("Details", "Home", new {id = Restaurant.Id});
             }
             return Page();
         }

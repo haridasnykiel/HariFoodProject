@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using HariFood.Data;
 using HariFood.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace HariFood.Services {
     public class SqlRestaurantData : IRestaurantData {
@@ -34,6 +35,13 @@ namespace HariFood.Services {
 
         public IEnumerable<Restaurant> GetAll () {
             return _context.Restaurants.OrderBy (r => r.Name);
+        }
+
+        public Restaurant Update(Restaurant restaurant)
+        {
+            _context.Attach(restaurant).State = EntityState.Modified;
+            _context.SaveChanges();
+            return restaurant;
         }
     }
 }
